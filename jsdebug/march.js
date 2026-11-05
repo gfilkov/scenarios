@@ -5,7 +5,8 @@ var recordingChecked = false;
 let camera, scene, renderer, light, fbxLoader, gltfloader, mixer;
 let directionalLight;
 let modelReady = false;
-let animationAction;
+
+
 
 let listener = new THREE.AudioListener();
 
@@ -28,7 +29,11 @@ let clips;
 
 let players = [];
 const animGroup = new THREE.AnimationObjectGroup();
+mixer = new THREE.AnimationMixer(animGroup);
 let speed = 0;  // players' movement speed.n To be calculated.
+
+let idleAction, walkAction;
+let currentAction;
 
 let water, sun, capsule;
 let sunGhost;   // point far away in the sun durection
@@ -132,7 +137,8 @@ if (!iOS())
 
 function onEnded() {
 	console.log("onEnded()");
-	animationAction.paused = false;
+	// animationAction.paused = false;	// ###
+	walkAction.paused = false;
 	audioSquad.play();
 
 	// ### iOS: TBD
@@ -175,46 +181,56 @@ function initAssets() {
 	fbxLoader = new THREE.FBXLoader();
 
 	// # 3
-	// SWAT guy
-	fbxLoader.load(
-		'3D-models/swat-walking.fbx',
-		(object) => {
-			object.scale.set(0.01, 0.01, 0.01);
-			//directionalLight.target = object;
-			modelReady = true;
+	// SWAT guy GLB
+	// Mixamo model combined with 2nd animation. NB: it is gltf.animations[], not normal model.animations!
+	// https://kestrelworks.itch.io/oneglb-try
+	gltfloader = new THREE.GLTFLoader();
+	gltfloader.load(
+		'3D-models/swat_walking_fbx47_combined.glb',
+		(gltf) => {
+			model = gltf.scene;
 
-			clips = object.animations;
+			//model.castShadow = true;
+
+			//// shadows
+			//gltf.scene.traverse(function (child) {
+			//    if (child.isMesh) {
+			//        child.castShadow = true;
+			//        child.receiveShadow = true;
+			//    }
+			//});
+
+			////model.scale.set(0.01, 0.01, 0.01);
 
 			//// turn to west
-			object.rotation.y = Math.PI;
+			model.rotation.y = Math.PI;
 
-			object.name = 'player_0_0';
-			object.translateY(1.1);
-			players.push(object);
+			model.name = 'player_0_0';
+			model.translateY(1.1);
+			players.push(model);
 
 			animGroup.add(players[0]);
 			scene.add(players[0]);
 
-			mixer = new THREE.AnimationMixer(animGroup);
-			const clip = THREE.AnimationClip.findByName(clips, 'mixamo.com');
-			addMixerListeners();
+			let clips = gltf.animations;
 
-			animationAction = mixer.clipAction(clip);
-			animationAction.play();
-			//animationAction.stop();  // player at T pose - not good
-			animationAction.paused = true;  // OK
+			walkAction = mixer.clipAction(clips[0]);
+			idleAction = mixer.clipAction(clips[1]);
+			currentAction = idleAction;
+			idleAction.play(); // Start with idle
 
 			// walk speed
-			speed = step / clip.duration;
+			speed = step / clips[0].duration;
+
+			modelReady = true;
 
 			assetsCount++;
-			checkAssets(assets, assetsCount, 'swat-walking.fbx');
+			checkAssets(assets, assetsCount, 'swat.glb');
 		},
 		(xhr) => {
 			//console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
 		},
 		(error) => {
-			console.log('FBX load error:');
 			console.log(error);
 		}
 	);
@@ -224,7 +240,6 @@ function initAssets() {
 	////#// three@0.132.2 does not include Capsule geometry!? Later versions are modules and typescripts.
 	// My workaround: exported capsule.glb from Unity.
 
-	gltfloader = new THREE.GLTFLoader();
 
 	gltfloader.load(
 		'3D-models/Capsule.glb',
@@ -307,6 +322,19 @@ function addMixerListeners() {
 	// mixer.addEventListener( 'finished', function( e ) {
 	//    console.log('finished');
 	// } );
+}
+
+function switchGroupAnimation(newAction, duration = 0.3) {
+	if (currentAction === newAction) return;
+
+	// Make sure the new action is playing
+	newAction.reset().play();
+
+	// Fade out the old, fade in the new
+	currentAction.crossFadeTo(newAction, duration, false);
+
+	// Update the reference
+	currentAction = newAction;
 }
 
 // init is called from MoW_templates() when all assets are loaded
@@ -559,6 +587,9 @@ function makeSquad() {
 
 	// add positional audiosource
 	players[0].add(audioSquad);	// THREE.Audio stuff.
+
+	// switch animation group to idle
+	switchGroupAnimation(idleAction);
 }
 
 // set players.position.x = raster y
@@ -806,8 +837,9 @@ function update(delta) {
 		// Natural and elegant, but not reliable. If sound fails, scenario is blocked.
 
 		// audioMarch length: 2 secs, plus start delay...
-		if (animationAction.paused && Date.now() - commandTime > 3000) {
-			animationAction.paused = false;
+		// #### switch animation clips
+		if (currentAction === idleAction && Date.now() - commandTime > 3000) {
+			switchGroupAnimation(walkAction);
 
 			// if sound onEnded() failed / IOS
 			if (!audioSquad.isPlaying) {
@@ -817,6 +849,8 @@ function update(delta) {
 					audioSquad.play();
 				}
 			}
+
+			addMixerListeners();	// move squad on clip end/loop
 		}
 
 		if (players[0].position.z < camera.position.z) {
