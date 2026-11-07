@@ -1,0 +1,82 @@
+{
+  "thumbnails": [
+    {
+      "id": "s01",
+      "src": "thumbnails/autumn.png",
+      "title": "Autumn Blues",
+      "scene": "autumn"
+    },
+    {
+      "id": "s02",
+      "src": "thumbnails/birds.png",
+      "title": "Birds",
+      "scene": "birds"
+    },
+    {
+      "id": "s03",
+      "src": "thumbnails/bubbles.png",
+      "title": "Bubbles",
+      "scene": "bubbles"
+    },
+    {
+      "id": "s04",
+      "src": "thumbnails/fireworks.png",
+      "title": "Fireworks",
+      "scene": "fireworks"
+    },
+    {
+      "id": "s05",
+      "src": "thumbnails/flowers.png",
+      "title": "Flowers",
+      "scene": "flowers"
+    },
+    {
+      "id": "s06",
+      "src": "thumbnails/honey-bees.png",
+      "title": "Honey Bees",
+      "scene": "honey-bees"
+    },
+    {
+      "id": "s07",
+      "src": "thumbnails/march.png",
+      "title": "March",
+      "scene": "march"
+    },
+    {
+      "id": "s08",
+      "src": "thumbnails/marienbad.png",
+      "title": "Marienbad, Colonnade",
+      "scene": "marienbad"
+    },
+    {
+      "id": "s09",
+      "src": "thumbnails/shells.png",
+      "title": "Shells on the Beach",
+      "scene": "shells"
+    },
+    {
+      "id": "s10",
+      "src": "thumbnails/space.png",
+      "title": "Space",
+      "scene": "space"
+    },
+    {
+      "id": "s11",
+      "src": "thumbnails/train.png",
+      "title": "Train",
+      "scene": "train"
+    },
+    {
+      "id": "s12",
+      "src": "thumbnails/wintry-road.png",
+      "title": "Wintry Road",
+      "scene": "wintry-road"
+    },
+    {
+      "id": "s13",
+      "src": "thumbnails/xmas-tree.png",
+      "title": "Xmas Tree",
+      "scene": "xmas-tree"
+    }
+  ]
+}

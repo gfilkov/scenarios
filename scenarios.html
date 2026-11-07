@@ -4,25 +4,54 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scenarios Test</title>
+    <title>Scenarios</title>
+
+    <link rel="stylesheet" href="css/scenarios.css">
 </head>
 <body>
-    <h1>Testing Scenarios calling Azure Function</h1>
 
-    <!!-- scenes and scene handlers are defined in gfloader.js -->
-    <a href="Play.html?scene=autumn">Autumn</a><br />
-    <a href="Play.html?scene=bubbles">Bubbles</a><br />
-    <a href="Play.html?scene=flowers">Flowers</a><br />
-    <a href="Play.html?scene=honey-bees">Honey Bees</a><br />
-    <a href="Play.html?scene=march">March</a><br />
-    <a href="Play.html?scene=marienbad">Marienbad</a><br />
-    <a href="Play.html?scene=space">Space</a><br />
-    <a href="Play.html?scene=xmas-tree">Xmas Tree</a><br />
+    <main class="gallery" id="gallery" aria-label="Scenario thumbnails"></main>
 
-    <a href="Play.html?scene=birds">Birds</a><br />
-    <a href="Play.html?scene=shells">Shells</a><br />
-    <a href="Play.html?scene=fireworks">Fireworks</a><br />
-    <a href="Play.html?scene=train">Train</a><br />
-    <a href="Play.html?scene=wintry-road">Wintry Road</a><br />
+    <!-- Settings drawer, hidden by default -->
+    <aside class="settings" id="settings" aria-hidden="true" aria-labelledby="settingsTitle">
+        <header class="settings-header">
+            <h2 id="settingsTitle">Scenario settings</h2>
+            <button class="close-btn" id="closeSettings" aria-label="Close settings">×</button>
+        </header>
+
+        <div class="settings-body">
+            <img id="settingsPreview" class="preview" alt="Selected scenario preview">
+
+            <label class="field">
+                <span>Text</span>
+                <textarea id="txtText" rows="4" placeholder="Short lines of text..."></textarea>
+            </label>
+
+            <label class="field">
+                <span>Message</span>
+                <input id="txtMessage" type="text" placeholder="Longer single-line message">
+            </label>
+
+            <label class="field">
+                <span>Color</span>
+                <input id="txtColor" type="color" value="#00ff88">
+            </label>
+
+            <fieldset class="field radio-group">
+                <legend>Type</legend>
+                <label><input type="radio" name="type" value="LED" checked> LED</label>
+                <label><input type="radio" name="type" value="TTF"> TTF</label>
+            </fieldset>
+
+            <div class="actions">
+                <button id="btnPlay" class="primary">Play</button>
+                <button id="btnCancel">Cancel</button>
+            </div>
+        </div>
+    </aside>
+
+    <div class="backdrop" id="backdrop" hidden></div>
+
+    <script src="jsdebug/scenarios.js"></script>
 </body>
 </html>
