@@ -224,12 +224,12 @@ function loadSnowyGround() {
 	// NB: reusing the same instance recommended. But be aware loadis async
 	textureloader = new THREE.TextureLoader();
 
-	colorTexture = loadTexture(textureloader, '3D-models/snow/Snow_basecolor.png');
-	normalTexture = loadTexture(textureloader, '3D-models/snow/Snow_normal.png');
-	metallicTexture = loadTexture(textureloader, '3D-models/snow/Snow_metallic.png');
-	heightTexture = loadTexture(textureloader, '3D-models/snow/Snow_height.png');
-	roughnessTexture = loadTexture(textureloader, '3D-models/snow/Snow_roughness.png');
-	aoTexture = loadTexture(textureloader, '3D-models/snow/Snow_ambientOcclusion.png');
+	colorTexture = loadTexture(textureloader, R2endpoint + 'snow/Snow_basecolor.png');
+	normalTexture = loadTexture(textureloader, R2endpoint + 'snow/Snow_normal.png');
+	metallicTexture = loadTexture(textureloader, R2endpoint + 'snow/Snow_metallic.png');
+	heightTexture = loadTexture(textureloader, R2endpoint + 'snow/Snow_height.png');
+	roughnessTexture = loadTexture(textureloader, R2endpoint + 'snow/Snow_roughness.png');
+	aoTexture = loadTexture(textureloader, R2endpoint + 'snow/Snow_ambientOcclusion.png');
 }
 
 function loadTexture(loader, path) {
@@ -894,18 +894,18 @@ function initAssets() {
 	// load models
 	// #3
 	//oadGltfModel('3D-models/ChristmassTree.fbx.glb', xmastreeOnLoad);
-	loadGltfModel('3D-models/ChristmassTree.glb', xmastreeOnLoad);
+	loadGltfModel(R2endpoint + 'ChristmassTree.glb', xmastreeOnLoad);
 
 	// async!!! Goes to onLoad() funcs
 
 	// #4
-	loadGltfModel('3D-models/fir_tree.glb', firtreeOnLoad);
+	loadGltfModel(R2endpoint + 'fir_tree.glb', firtreeOnLoad);
 
 	// #5
-	loadGltfModel('3D-models/fir_tree_11.fbx.glb', firtree1OnLoad);
+	loadGltfModel(R2endpoint + 'fir_tree_11.fbx.glb', firtree1OnLoad);
 
 	// #6
-	loadGltfModel('3D-models/snowman_-_low_poly.glb', snowmanOnLoad);
+	loadGltfModel(R2endpoint + 'snowman_-_low_poly.glb', snowmanOnLoad);
 
 	// load audio
 	/// THREE.Audio version:

@@ -27,7 +27,7 @@ body { margin: 0; font-family: system-ui, sans-serif; background: #111; color: #
 
 .thumb-card {
     flex: 0 0 auto;
-    width: var(--thumb-w);
+    width: min(500px, 100%);
     max-width: 100%;
     cursor: pointer;
     border-radius: 8px;
@@ -35,7 +35,7 @@ body { margin: 0; font-family: system-ui, sans-serif; background: #111; color: #
     scroll-snap-align: center;
     transition: transform .15s ease, box-shadow .15s ease;
     background: #1c1c1c;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent; /* removes tap blink */
     touch-action: manipulation; /* kills the 300ms double-tap delay */
     cursor: pointer;
 }

@@ -9,7 +9,7 @@ var recordingChecked = false;
 
 //#region CONFIG
 //// Table
-const tblpath = 'models/table/';
+const tblpath = 'models/table/';	// local folder
 const tabletopY = 2.444;
 
 // sounds
@@ -17,9 +17,9 @@ const beeSoundSrc = 'sounds/buzzing-bee-1-107820.mp3';
 const swarmSoundSrc = 'sounds/beehive-65477.mp3';
 
 // Loaders
-const pathpot = 'models/pot_scan_01.glb';
+const pathpot = R2endpoint + 'pot_scan_01.glb';
 const pathtxt = 'textures/honey1.png';
-const pathbee = 'models/Bee.glb';
+const pathbee = R2endpoint + 'Bee.glb';
 
 let beescale = 0.007;
 let beescalefactor = 3;	// up/down animation scale is much smaller!?
@@ -1230,7 +1230,7 @@ function stampDecal() {
 
 // Load Table.obj model
 function loadTable() {
-	// Load OBJ file
+	// Load OBJ file from local folder
 	const objLoader = new THREE.OBJLoader();
 	objLoader.load('models/table/Table.obj', (object) => {
 		 // 2 child meshes: 'table' and 'tablecloth'

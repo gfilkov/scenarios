@@ -237,15 +237,15 @@ function initAssets() {
 
 	gltfLoader = new THREE.GLTFLoader();
 
-	loadGltfModel('models/PlantGfBloom.glb', plantOnLoad);
-	loadGltfModel('models/grass-block-6x8.glb', grassOnLoad);
-	// loadGltfModel('models/Grass lawn.glb', grassOnLoad);		// detailed, but large and slow
+	loadGltfModel(R2endpoint + 'PlantGfBloom.glb', plantOnLoad);
+	loadGltfModel(R2endpoint + 'grass-block-6x8.glb', grassOnLoad);
+	// loadGltfModel(R2endpoint + 'Grass lawn.glb', grassOnLoad);		// detailed, but large and slow
 
-	loadGltfModel('models/Shrub.glb', shrubOnLoad);
-	loadGltfModel('models/Stone.glb', stoneOnLoad);
-	loadGltfModel('models/Tuft of grass.glb', tuftOnLoad);
+	loadGltfModel(R2endpoint + 'Shrub.glb', shrubOnLoad);
+	loadGltfModel(R2endpoint + 'Stone.glb', stoneOnLoad);
+	loadGltfModel(R2endpoint + 'Tuft of grass.glb', tuftOnLoad);
 
-	loadGltfModel('models/Fluttering_butterfly.glb', butterlyOnLoad);
+	loadGltfModel(R2endpoint + 'Fluttering_butterfly.glb', butterlyOnLoad);
 }
 
 let canvas = null, overlayCanvas = null, container = null;	// overlayContext - do not reuse, create on the fly

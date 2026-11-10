@@ -184,9 +184,13 @@ function initAssets() {
 	// SWAT guy GLB
 	// Mixamo model combined with 2nd animation. NB: it is gltf.animations[], not normal model.animations!
 	// https://kestrelworks.itch.io/oneglb-try
+
+	// R2endpoint - defined in Play.html
+
 	gltfloader = new THREE.GLTFLoader();
 	gltfloader.load(
-		'3D-models/swat_walking_fbx47_combined.glb',
+		// '3D-models/swat_walking_fbx47_combined.glb',
+		R2endpoint + 'swat_walking_fbx47_combined.glb',
 		(gltf) => {
 			model = gltf.scene;
 
@@ -242,7 +246,7 @@ function initAssets() {
 
 
 	gltfloader.load(
-		'3D-models/Capsule.glb',
+		R2endpoint + 'Capsule.glb',
 		(gltf) => {
 			let model = gltf.scene;
 			let scl = 1 / 64;
