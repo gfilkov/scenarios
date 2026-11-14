@@ -4,79 +4,98 @@
       "id": "s01",
       "src": "thumbnails/autumn.png",
       "title": "Autumn Blues",
-      "scene": "autumn"
+      "scene": "autumn",
+      "description": "Autumn leaves falling. 1 - 2 lines, up to 16 chars wide."
     },
     {
       "id": "s02",
       "src": "thumbnails/birds.png",
       "title": "Birds",
-      "scene": "birds"
+      "scene": "birds",
+      "description": "Flock of birds caving. 1 - 2 lines, up to 16 chars wide."
     },
     {
       "id": "s03",
       "src": "thumbnails/bubbles.png",
       "title": "Bubbles",
-      "scene": "bubbles"
+      "scene": "bubbles",
+      "description": "Bubbles. 1 - 2 lines, up to 12 chars wide."
     },
     {
       "id": "s04",
       "src": "thumbnails/fireworks.png",
       "title": "Fireworks",
-      "scene": "fireworks"
+      "scene": "fireworks",
+      "type": "LED",
+      "description": "Fireworks. LED enforced. 1 - 3 lines, up to 16 chars wide, multy-pages."
     },
     {
       "id": "s05",
       "src": "thumbnails/flowers.png",
       "title": "Flowers",
-      "scene": "flowers"
+      "scene": "flowers",
+      "type": "LED",
+      "description": "Flowers blooming. LED enforced. 1 - 2 lines, up to 12 chars wide"
     },
     {
       "id": "s06",
       "src": "thumbnails/honey-bees.png",
       "title": "Honey Bees",
-      "scene": "honey-bees"
+      "scene": "honey-bees",
+      "type": "LED",
+      "description": "Honey Bees. LED recommended. 1 - 3 lines, up to 12 chars wide; 1st line <= 10 chars."
     },
     {
       "id": "s07",
       "src": "thumbnails/march.png",
       "title": "March",
-      "scene": "march"
+      "scene": "march",
+      "type": "LED",
+      "description": "Soldiers March. LED enforced. Single line enforced. 7 chars maximum."
     },
     {
       "id": "s08",
       "src": "thumbnails/marienbad.png",
-      "title": "Marienbad, Colonnade",
-      "scene": "marienbad"
+      "title": "Marienbad",
+      "scene": "marienbad",
+      "description": "Marienbad, Collonade, Garnets. 1 - 3 lines, up to 16 chars wide"
     },
     {
       "id": "s09",
       "src": "thumbnails/shells.png",
-      "title": "Shells on the Beach",
-      "scene": "shells"
+      "title": "Shells",
+      "scene": "shells",
+      "type": "LED",
+      "description": "Shells on the Beach. LED enforced. 1 - 2 lines, up to 16 chars wide. Multi-page support."
     },
     {
       "id": "s10",
       "src": "thumbnails/space.png",
       "title": "Space",
-      "scene": "space"
+      "scene": "space",
+      "description": "Space station in meteor shower. 1 - 2 lines, up to 16 chars wide"
     },
     {
       "id": "s11",
       "src": "thumbnails/train.png",
       "title": "Train",
-      "scene": "train"
+      "scene": "train",
+      "description": "Train in the moonlight. Single line enforced. Up to 24 chars. Multi-page support."
     },
     {
       "id": "s12",
       "src": "thumbnails/wintry-road.png",
       "title": "Wintry Road",
-      "scene": "wintry-road"
+      "scene": "wintry-road",
+      "description": "Wintry Road, snow on the windshield. 1 - 3 lines, up to 16 chars wide. Multi-page support."
     },
     {
       "id": "s13",
       "src": "thumbnails/xmas-tree.png",
       "title": "Xmas Tree",
-      "scene": "xmas-tree"
+      "scene": "xmas-tree",
+      "type": "LED",
+      "description": "Xmas Tree in the forest. LED strongly recommended. 1 - 2 lines, up to 16 chars wide"
     }
   ]
 }

@@ -62,9 +62,15 @@ function getScenarioParams() {
 	let canvasHeight = urlParams.get('canvasHeight');
 	let step = urlParams.get('step');
 	let message = urlParams.get('message');
+
+	let color = urlParams.get('color');
+
+	// NB: type param is not used in API/TextToCoords; fontFamily is used instead.
+	if (type == 'LED')
+		fontFamily = 'LED';	// default: TTF
 	
 	return {scene: scene, text: text, align: align, type: type, fontFamily: fontFamily, fontSize: fontSize,
-		canvasWidth: canvasWidth, canvasHeight: canvasHeight, step: step, message: message};
+		canvasWidth: canvasWidth, canvasHeight: canvasHeight, step: step, message: message, color: color};
 }
 
 // gets raster from API (new format, centered raster)
@@ -72,7 +78,7 @@ function getScenarioParams() {
 // If scenario uses any other params, it should set rasterParams properties accordingly before calling getRaster()
 // optional 'slogan' param - to override rasterParams.text for multi-slogan scenarios.
 async function getRaster(callback, slogan) {
-	console.log("ShowRaster::getRaster()");
+	console.log(`ShowRaster::getRaster('${slogan}')`);
 	
 	fetchRasterFromApiAsyncNew({ api: apiUrl, param: rasterParams, callback: callback, slogan }).then(result => {
 

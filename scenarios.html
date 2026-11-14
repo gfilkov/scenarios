@@ -22,9 +22,15 @@
         <div class="settings-body">
             <img id="settingsPreview" class="preview" alt="Selected scenario preview">
 
+            <!-- read-only description -->
+            <label class="field">
+                <span>Description</span>
+                <textarea id="txtDescription" rows="3" readonly placeholder="—"></textarea>
+            </label>
+
             <label class="field">
                 <span>Text</span>
-                <textarea id="txtText" rows="4" placeholder="Short lines of text..."></textarea>
+                <textarea id="txtText" rows="3" placeholder="Short lines of text..."></textarea>
             </label>
 
             <label class="field">
@@ -37,11 +43,11 @@
                 <input id="txtColor" type="color" value="#00ff88">
             </label>
 
-            <fieldset class="field radio-group">
-                <legend>Type</legend>
+            <div class="field radio-group" role="radiogroup" aria-labelledby="typeLabel">
+                <span id="typeLabel">Type</span>
                 <label><input type="radio" name="type" value="LED" checked> LED</label>
                 <label><input type="radio" name="type" value="TTF"> TTF</label>
-            </fieldset>
+            </div>
 
             <div class="actions">
                 <button id="btnPlay" class="primary">Play</button>

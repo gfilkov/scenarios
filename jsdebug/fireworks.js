@@ -184,12 +184,17 @@ let salvoOn = false;
 let iloop = 0;
 let loopCount = 1;	// nSalvos = 1;	// 2;
 
-const slogans = rasterParams.text.split('||');
+// NB: let Scenario to define default Magic Word
+let magicWord = rasterParams.text;
+if (!magicWord)
+	magicWord = "FIREWORKS";
+
+const slogans = magicWord.split('||');
 if (slogans.length > loopCount)
 	loopCount = slogans.length;
 
 // NB: uses global rasterParams object (ShowRaster.js). Set other properties if/as needed.
-rasterParams.fontFamily = 'LED';
+rasterParams.fontFamily = 'LED';	// enforced in this scenario
 
 // optional 'slogan' param - to override rasterParams.text for multi-slogan scenarios.
 getRaster(rasterReady, slogans[iloop]);
@@ -1140,8 +1145,10 @@ function paint() {
 	//info.style.zIndex = 1000;
 
 	// if last salvo
-	if (iloop == loopCount - 1 && allFading)
-		messageOnCanvas(frontCanvas, rasterParams.message, { color: 'yellow', strokeColor: 'yellow' });
+	if (iloop == loopCount - 1 && allFading) {
+		let color = rasterParams.color ? rasterParams.color : 'yellow';
+		messageOnCanvas(frontCanvas, rasterParams.message, { color: color, strokeColor: 'yellow' });
+	}
 }
 
 // Called from scenario_three_template::exitCheck()

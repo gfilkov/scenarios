@@ -178,12 +178,18 @@ window.addEventListener('resize', centerCanvas);
 //#region RASTER
 // <scenario> calls ShowRaster::getRaster() => callback: <scenario>::RasterReady()
 // ShowRaster::rasterParams shoul be ready here.
-const slogans = rasterParams.text.split('||');
+
+// NB: let Scenario to define default Magic Word
+let magicWord = rasterParams.text;
+if (!magicWord)
+	magicWord = "SHELLS";
+
+const slogans = magicWord.split('||');
 if (slogans.length > loopCount)
 	loopCount = slogans.length;
 
 // NB: uses global rasterParams object (ShowRaster.js). Set other properties if/as needed.
-rasterParams.fontFamily = 'LED';
+rasterParams.fontFamily = 'LED';	// enforced
 
 // optional 'slogan' param - to override rasterParams.text for multi-slogan scenarios.
 getRaster(rasterReady, slogans[loopIdx]);

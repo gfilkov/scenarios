@@ -98,9 +98,27 @@ body { margin: 0; font-family: system-ui, sans-serif; background: #111; color: #
   background: #0d0d0d; color: #eee; border: 1px solid #333; border-radius: 6px; padding: 8px;
   font: inherit;
 }
-.radio-group { border: 0; padding: 0; }
-.radio-group legend { margin-bottom: 6px; }
-.radio-group label { margin-right: 16px; }
+/* Type radios in one row */
+.radio-group {
+    flex-direction: row; /* overrides .field's column */
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+}
+
+    .radio-group legend {
+        /* legend can't sit inline with flex items, so make it a full-width label */
+        flex-basis: 100%;
+        margin-bottom: 4px;
+    }
+
+    /* Tighten the radio label spacing since we now use gap for layout */
+    .radio-group label {
+        margin-right: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
 
 .actions { display: flex; gap: 10px; margin-top: 8px; }
 .actions button { flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #333; background: #222; color: #eee; cursor: pointer; }
@@ -113,4 +131,15 @@ body { margin: 0; font-family: system-ui, sans-serif; background: #111; color: #
 /* Reduced motion respect */
 @media (prefers-reduced-motion: reduce) {
   .settings, .thumb-card { transition: none; }
+}
+
+/* Read-only textarea: same look as the others, but visibly non-editable */
+.field textarea[readonly] {
+    background: #161616; /* slightly darker than the editable fields' #0d0d0d */
+    color: #cfcfcf;
+    cursor: default;
+}
+.field textarea[readonly]:focus {
+    outline: none; /* no focus ring — it's not editable */
+    border-color: #333; /* keep the border from flashing to accent */
 }

@@ -46,12 +46,13 @@ const bannerRotx = -0.53;	// rads
 const dX = 0.4;	// banner horiz shift
 
 const TRINKET_D = 1;	// leaf
-const trinketScaleMin = 0.16;	// test sphere: 0.08
+const trinketScaleMin = 0.1;	// 0.16;	// test sphere: 0.08
 const trinketScaleMax = 0.8;	// test sphere: 0.4
 let trinketScale = 1;
 
 // raster mapping area, initial setting; calculate size using trinket size, step and density
-const DENSITY = 0.75;	// hom many trinkets cover 1 step. For test spheres: 1
+// NB: this scenario uses DENSITY in its own createTextRect() fumction (not using ShowRaster one)
+const DENSITY = 2; //  0.75;	// hom many times trinket covers 1 step. For test spheres: 1
 let TEXT_WIDTH = BANNER_WIDTH;
 let TEXT_HEIGHT = 4;			// to be calculated
 
@@ -95,7 +96,12 @@ var frustum = new THREE.Frustum();
 // NB: uses global rasterParams object (ShowRaster.js). Set other properties if/as needed.
 // rasterParams.fontFamily = 'LED';
 
-getRaster(rasterReady);
+// NB: let Scenario to define default Magic Word
+let magicWord = rasterParams.text;
+if (!magicWord)
+	magicWord = "AUTUMN";
+
+getRaster(rasterReady, magicWord);
 
 // callback
 // strange thing happening... rasterReady() called more than once, breaking checkAssets() logic.
@@ -229,6 +235,10 @@ let directionalLight;
 function init() {
 	console.log("autumn: init()");
 
+	// White directional light at half intensity shining from the top.
+	const directionalLight = new THREE.DirectionalLight(0xffffff);
+	directionalLight.intensity = 64;
+
 	// Back to old good container DIV with canvases inside.
 	// Advantage: easier and more logical to center single DIV than multiple canvases.
 
@@ -354,8 +364,10 @@ function update(elapsed, delta) {
 	// downtime - leaves stay down
 	else if (elapsed > alldowntick + downtime) {
 		if (!messageShown) {
+			let color = rasterParams.color ? rasterParams.color : 'blue';
+
 			// scenario_three_template
-			messageOnCanvas(overlayCanvas, rasterParams.message, { color: 'blue', strokeColor: 'yellow' });
+			messageOnCanvas(overlayCanvas, rasterParams.message, { color: color, strokeColor: 'yellow' });
 			messageShown = true;
 		}
 		// leaves blown away
@@ -637,7 +649,7 @@ function createTextRect(visible) {
 	// NB: Autumn is a special case: almost no restriction on banner height - the park walk is long.
 	// Therefore we start with width restriction only.
 	let xCount = raster.Statistics.TextSize.Width / raster.Statistics.Step;	// number of trinkets in horiz row.
-	let textNaturalWidth = TRINKET_D * DENSITY * xCount;
+	let textNaturalWidth = TRINKET_D / DENSITY * xCount;
 
 	// clamp
 	trinketScale = TEXT_WIDTH / textNaturalWidth;

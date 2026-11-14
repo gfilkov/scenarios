@@ -11,9 +11,14 @@ var recordingChecked = false;
 //// no slogans in this scenario: single page
 // ShowRaster.js:
 // NB: uses global rasterParams object (ShowRaster.js). Set other properties if/as needed.
-rasterParams.fontFamily = 'LED';
+rasterParams.fontFamily = 'LED';	// enforced in this scenario
 
-getRaster(rasterReady);
+// NB: let Scenario to define default Magic Word
+let magicWord = rasterParams.text;
+if (!magicWord)
+	magicWord = "FLOWERS";
+
+getRaster(rasterReady, magicWord);
 
 // callback
 // strange thing happening... rasterReady() called more than once, breaking checkAssets() logic.

@@ -116,27 +116,18 @@ const timeDelta = 200;
 //getRasterFromApi(word, 'led1');
 //var test = await getRasterFromApi('PROBA', 'led1');
 
-
 ////// DEBUG
 const DEBUG_MARK = false;	// mark target positions
 let focusX, focusY;	// focus point (infinity point the flock flies to)
 
-// word = "TESTING";
-// word = "NO";
-// word = "PROBA|PERA";
-
-// ### params already processed by ShowRaster here: rasterParams.text, rasterParams.message, ...
-// let myparams = getScenarioParams();
-// let myword = myparams.word;
-// if (null === myword || myword.length == 0)
-	// myword = scenario;
-
-// let myMessage = myparams.message;	// user message
-// let myMessage = "User Message";
-
 var raster;	// to be assigned in rasterReady()
 // NB: uses global rasterParams object (ShowRaster.js). Set other properties if/as needed.
-getRaster(rasterReady);
+// NB: let Scenario to define default Magic Word
+let magicWord = rasterParams.text;
+if (!magicWord)
+	magicWord = "BIRDS";
+
+getRaster(rasterReady, magicWord);
 
 initAssets();
 
@@ -574,8 +565,12 @@ function paint() {
 			break;
 		// birds fly / scale away
 		case 3:
-			if (rasterParams.message)	// defined in ShowRaster
-				messageOnCanvas(canvasText, rasterParams.message, { color: 'blue', strokeColor: 'white' });
+			if (rasterParams.message) {
+				// defined in ShowRaster
+				let color = rasterParams.color ? rasterParams.color : 'blue';
+
+				messageOnCanvas(canvasText, rasterParams.message, { color: color, strokeColor: 'white' });
+			}
 
 			// case 3 will be set on probing last bird (opacity ~= 0)
 			if (trinkets[trinkets.length - 1].opacity < 0.1)

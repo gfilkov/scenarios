@@ -24,16 +24,15 @@ let assetsCount = 0;
 
 const raycaster = new THREE.Raycaster();
 
-// multi-slogan functionality
-let iloop = 0;
-
-// ShowRaster::rasterParams shoul be ready here.
-const slogans = rasterParams.text.split('||');
-
 // NB: uses global rasterParams object (ShowRaster.js). Set other properties if/as needed.
 rasterParams.fontFamily = 'LED';
 
-getRaster(rasterReady, slogans[iloop]);
+// NB: let Scenario to define default Magic Word
+let magicWord = rasterParams.text;
+if (!magicWord)
+	magicWord = "MERRY XMAS!";
+
+getRaster(rasterReady, magicWord);
 
 // callback
 // strange thing happening... rasterReady() called more than once, breaking checkAssets() logic.
@@ -719,7 +718,8 @@ function updateStage(delta) {
 
 			turnAngle += dAngle;
 			if (turnAngle > angle1) {
-				messageOnCanvas(overlayCanvas, rasterParams.message, { color: 'yellow', strokeColor: 'yellow' });
+				let color = rasterParams.color ? rasterParams.color : 'yellow';
+				messageOnCanvas(overlayCanvas, rasterParams.message, { color: color, strokeColor: color });
 
 				// camera goes up; target goes to center
 				p1 = camera.position.clone();

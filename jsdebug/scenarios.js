@@ -91,13 +91,24 @@
     previewImg.alt = item.title || item.id;
     highlightCard(item.id);
 
+    txtText.placeholder = current.scene;
+
     // Restore any per-scenario saved settings, else defaults
     const saved = JSON.parse(localStorage.getItem('settings:' + item.id) || 'null');
     txtText.value    = saved?.text ?? '';
     txtMessage.value = saved?.message ?? '';
-    txtColor.value   = saved?.color ?? '#00ff88';
-    const type = saved?.type ?? 'LED';
-    document.querySelector(`input[name="type"][value="${type}"]`).checked = true;
+      txtColor.value = saved?.color ?? '#00ff88';
+
+      // do not restore Type, use recommended (optional in JSON)
+      //const type = saved?.type ?? 'LED';
+      let type = 'TTF';
+      if (item.type)
+          type = item.type;
+
+      document.querySelector(`input[name="type"][value="${type}"]`).checked = true;
+
+      const txtDescription = document.getElementById('txtDescription');
+      txtDescription.value = item.description ?? '';
 
     settings.classList.add('open');
     settings.setAttribute('aria-hidden', 'false');
@@ -131,9 +142,9 @@
     btnPlay.addEventListener('click', () => {
         if (!current) return;
 
-        // default text to scene
-        if (!txtText.value)
-            txtText.value = current.scene;
+        //// default text to scene
+        //if (!txtText.value)
+        //    txtText.value = current.scene;
 
         const payload = {
             scene: current.scene,                    // e.g. "birds"

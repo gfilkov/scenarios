@@ -69,7 +69,13 @@ function initAssets() {
     // Calls MoW_template::checkAssets() => scenario.init()
 
     // 1: raster, 2: audio, 3: texture, 4: font
-    getRaster(rasterReady);
+
+    // NB: let Scenario to define default Magic Word
+    let magicWord = rasterParams.text;
+    if (!magicWord)
+        magicWord = "MARIENBAD";
+
+    getRaster(rasterReady, magicWord);
 
     // 2: audio
     const audioLoader = new THREE.AudioLoader();

@@ -78,11 +78,8 @@ let PierAmbientOcclusionMap;
 
 let isSquadReady = false;
 
-// multi-slogan functionality
+// multi-slogan functionality - not implemented
 let iloop = 0;
-
-// ShowRaster::rasterParams shoul be ready here.
-const slogans = rasterParams.text.split('||');
 
 let startTime = Date.now();
 let timeout = 30000;	// 30 secs
@@ -96,16 +93,23 @@ if (iOS()) {
 }
 
 // NB: uses global rasterParams object (ShowRaster.js). Set other properties if/as needed.
-rasterParams.fontFamily = 'LED';
+rasterParams.fontFamily = 'LED';	// enforced in this scenario
 
-// optional 'slogan' param - to override rasterParams.text for multi-slogan scenarios.
-getRaster(rasterReady, slogans[iloop]);
+// NB: let Scenario to define default Magic Word
+let magicWord = rasterParams.text;
+if (!magicWord)
+	magicWord = "MARCH";
+
+// enforce single line
+magicWord = magicWord.replaceAll("\n", "|");
+magicWord = magicWord.replaceAll("||", "|");	// remove pages delim
+magicWord = magicWord.replaceAll("|", " / ");	// remove lines delim
+
+getRaster(rasterReady, magicWord);
 
 // callback
 // strange thing happening... rasterReady() called more than once, breaking checkAssets() logic.
 // Using safety catch myAssetsCount
-
-// ### handle multy-slogan: TBD
 
 let myAssetsCount = -1;
 function rasterReady(result) {
@@ -137,7 +141,6 @@ if (!iOS())
 
 function onEnded() {
 	console.log("onEnded()");
-	// animationAction.paused = false;	// ###
 	walkAction.paused = false;
 	audioSquad.play();
 
@@ -762,8 +765,6 @@ var v1, v2; // moving params: move from v1 to v2
 var isPointerFollowing = false; // following squad
 var isAligned = false;  // align camera with pointer on stage4 (hover)
 
-var commandTime;
-
 function update(delta) {
 	// despite my attempts to synchronize workflow, tons of errors: "Cannot read properties of undefined"; check all
 	if (undefined === camera)
@@ -779,6 +780,7 @@ function update(delta) {
 	if (isRotating || isMoving || isSliding || isPointerMoving) {
 		// turn camera slowly from q1 to q2; increase stage when done
 		if (elapsedTime > actionTime) {
+			console.log(`update() (camera) incrementing stage ${stage}`);
 			stage++;
 			isRotating = isMoving = isSliding = isPointerMoving = false;
 			return;
@@ -795,6 +797,7 @@ function update(delta) {
 
 		if (isPointerMoving) {
 			if (elapsedTime > actionTime) {
+				console.log(`update() (pointer) incrementing stage ${stage}`);
 				stage++;
 				isPointerMoving = false;
 				return;
@@ -806,7 +809,7 @@ function update(delta) {
 		elapsedTime += delta;
 	}
 	else if (0 === stage) {
-		//// set turn paqrams to capsule
+		//// set turn params to capsule
 		// can't set turn to 1st guy, because it rotates through south then.
 
 		//setRotationParams(sunGhost, capsule.position);
@@ -826,24 +829,23 @@ function update(delta) {
 	}
 	else if (2 === stage) {
 		// start march
+		console.log(`Stage ${stage}: march command`);
 
 		if (iOS()) {
 			audioMarchIOS.play();
+			console.log("iOS");
 		} else {
 			audioMarch.play();
+			console.log("not iOS");
 		}
 
-		commandTime = Date.now();
-		stage = 3;
-	}
-	else if (3 === stage) {
 		//// Safety catch: march start is triggered by march-command sound finished event.
-		// Natural and elegant, but not reliable. If sound fails, scenario is blocked.
+		// Natural and elegant, but not reliable. If sound fails, scenario is blocked
+		setTimeout(() => {
+			console.log(`Stage ${stage}: switch animation to walkAction`);
 
-		// audioMarch length: 2 secs, plus start delay...
-		// #### switch animation clips
-		if (currentAction === idleAction && Date.now() - commandTime > 3000) {
 			switchGroupAnimation(walkAction);
+			walkAction.paused = false;
 
 			// if sound onEnded() failed / IOS
 			if (!audioSquad.isPlaying) {
@@ -855,9 +857,19 @@ function update(delta) {
 			}
 
 			addMixerListeners();	// move squad on clip end/loop
-		}
+		}, 3000);
 
-		if (players[0].position.z < camera.position.z) {
+		stage = 3;
+	}
+	else if (3 === stage) {
+		//// Safety catch: march start is triggered by march-command sound finished event.
+		// Natural and elegant, but not reliable. If sound fails, scenario is blocked.
+
+		// New raster is centered. 1st player is way to the left. Use middle one.
+		let imid = Math.floor(players.length / 2);
+
+		//if (players[0].position.z < camera.position.z) {
+		if (players[imid].position.z < camera.position.z) {
 			// move camera up
 			v1 = camera.position.clone();
 			v2 = new THREE.Vector3(-v1.x, v1.y + camHoverY, v1.z);
@@ -903,8 +915,10 @@ function update(delta) {
 
 				isPointerFollowing = true;
 
+				let color = rasterParams.color ? rasterParams.color : 'white';
+
 				// scenario_three_template:
-				messageOnCanvas(overlayCanvas, rasterParams.message, { strokeColor: 'white' });
+				messageOnCanvas(overlayCanvas, rasterParams.message, { strokeColor: color });
 				// messageOnCanvas(overlayCanvas, myMessage, { color: 'blue', strokeColor: 'blue' });
 			}
 		}

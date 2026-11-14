@@ -83,7 +83,15 @@ let iloop = 0;
 let nLoops = 2;	// 2;
 let loopOver = false;
 
-const slogans = rasterParams.text.split('||');
+let iSlogan = 0;	// ### safety slogan counter to avoid extra calls to getRaster(); numner of raster-ready slogans
+
+// NB: let Scenario to define default Magic Word
+let magicWord = rasterParams.text;
+if (!magicWord)
+	magicWord = "WINTRY|ROAD";
+
+const slogans = magicWord.split('||');
+
 if (slogans.length > nLoops)
 	nLoops = slogans.length;
 
@@ -106,32 +114,22 @@ function rasterReady(result) {
 		return;
 	}
 
-	if (result.Success)
+	if (result.Success) {
 		isRasterReady = true;
+		iSlogan++;	// slogan's served count
+	}
 
 	// raster = result;	// use global raster from ShowRaster
 	rasterCount = getRasterCount(result);   // ShowRaster.js
 
-	assetsCount++;
-	checkAssets(assets, assetsCount, 'raster');
+	if (0 == iloop) {
+		assetsCount++;
+		checkAssets(assets, assetsCount, 'raster');
+	}
 
 	myAssetsCount = assetsCount;
-
-	// multi-slogan support:
-	if (iloop > 0) {
-		// repeat
-		console.log(`Loop: ${iloop} Slogan: ${slogans[iloop]}`);
-
-		// for some absolutely misterious reason raster (defined in ShowRaster) stays unchanged from loop 0!?
-		raster = result;	// re-assign to be sure
-
-		nextLoop();
-	}
 }
 //#endregion
-
-
-
 
 
 //#region ASSETS
@@ -453,7 +451,8 @@ function paint() {
 
 	// showMessage set in updateWipers()
 	if (showMessage) {
-		messageOnCanvas(canvascar, rasterParams.message, { clear: false });
+		let color = rasterParams.color ? rasterParams.color : 'white';
+		messageOnCanvas(canvascar, rasterParams.message, { color: color, clear: false });
 
 		// if gameOver was signalled in checkLoops, set wait time to show message better
 		if (0 == gameOver)
@@ -462,7 +461,7 @@ function paint() {
 }
 
 function checkLoop() {
-	console.log('checkLoop()');
+	console.log(`checkLoop() iloop: ${iloop}`);
 
 	iloop += 1;
 
@@ -478,7 +477,7 @@ function checkLoop() {
 }
 
 function nextLoop() {
-	console.log('nextLoop()');
+	console.log(`nextLoop() iloop: ${iloop} slogans: ${slogans.length}`);
 
 	// assuming trinkets are created and inited
 	prevTime = startTime = new Date();
@@ -492,17 +491,19 @@ function nextLoop() {
 	cyclesCount = 0;
 	initialized = false;
 
+	loopOver = false;
+
 	if (da > 0)
 		da = -da;
+
+	//resetTrinkets();
 
 	// get new raster ASAP if there are more slogans: rasterReady()
 	if (slogans.length > 1 && iloop < slogans.length) {
 		console.log('Requested raster for slogans[', iloop, ']:', slogans[iloop]);
 		myAssetsCount = -1;	// reset getRaster extra loop safety catch
-		getRaster(rasterReady, slogans[iloop]);
+		getRaster(resetTrinkets, slogans[iloop]);
 	}
-
-	resetTrinkets();
 }
 //#endregion ANIMATION LOOP
 
@@ -581,8 +582,6 @@ function initTrinkets() {
 	mapped.forEach((charr) => {
 		// char element
 		charr.forEach((pnt) => {
-			// pnt.X
-
 			// select random flake image
 			let idx = Math.floor(random(flakesidx, imgarray.length));
 			let angle = random(0, 6.28); // 2*pi
@@ -694,9 +693,6 @@ function updateFlake(sp) {
 	let tangent = 2 / (2 + sp.dist);
 	let scale = tangent * targetFlakeScale;
 
-	//sp.setXScale(scale);
-	//sp.setYScale(scale)
-
 	if (scale > maxScale)
 		scale = maxScale;
 	sp.scale(scale);
@@ -752,11 +748,6 @@ function updateWipers(dt) {
 
 		// time when wipers are back.
 		allwipedtime = new Date();
-
-		//// reset trinkets if there are more loops
-		//if ((1 == slogans.length && iloop < 1) || (slogans.length > 1 && iloop < slogans.length - 1)) {
-		//	resetTrinkets();
-		//}
 	}
 
 	//  repeat mode.

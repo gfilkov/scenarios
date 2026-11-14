@@ -89,7 +89,12 @@ let rasterData;
 // NB: uses global rasterParams object (ShowRaster.js). Set other properties if/as needed.
 // rasterParams.fontFamily = 'LED';
 
-getRaster(rasterReady);
+// NB: let Scenario to define default Magic Word
+let magicWord = rasterParams.text;
+if (!magicWord)
+    magicWord = "SPACE";
+
+getRaster(rasterReady, magicWord);
 
 // callback
 // strange thing happening... rasterReady() called more than once, breaking checkAssets() logic.
@@ -517,8 +522,11 @@ function render(timestamp) {
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.fillText(message, (canvas.width / 2), (canvas.height / 32));
 
-    if (camera.position.z < 0)
-        messageOnCanvas(canvasText, rasterParams.message, { clear: false, strokeColor: 'white' });
+    if (camera.position.z < 0) {
+        let color = rasterParams.color ? rasterParams.color : 'white';
+        messageOnCanvas(canvasText, rasterParams.message, { clear: false, strokeColor: color });
+
+    }
 
     // crack on glass
     if (washit) {

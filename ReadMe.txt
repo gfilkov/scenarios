@@ -52,3 +52,54 @@ Solution:
 swat_walking_fbx47_combined.glb
 
 NB: oneglb places animation[] right in the root of result (gltf.animations) instead of gltf.scene
+
+= = = = = = = =
+
+* Created Cloudflare R2 bucket '3d-models' for large objects
+* Moved all GLbs there
+* Added to Play.html:
+
+    <!--Cloudflare R2 bucket '3d-models' for large objects-->
+    <script>var R2endpoint = "https://pub-753e957cef1d4a2ca7a373bc249cee82.r2.dev/"</script>
+
+- - - - -
+
+### My https://mowapi-hvb7htbzgfeubfh0.canadacentral-01.azurewebsites.net/ blacklisted by Norton.
+# Added Exclusion in Norton utilities (for my PC)
+# Submitted petition to Norton.
+
+- - - -
+# NEXT:
+- remove GLBs from Github
+- Identify and fix multiple small glitches in Scenarios (to be detailed).
+
+* Scenarios - define their own default Magic Word it no TEXT provided
+
+* Scenario Settings (Drawer): add description field.
+* Drawer: Type radio values (from json)
+
+** honey-bees bug
+alert('stage 9 safety catch!')
+- always extra flies in the table.
+- single bee slow on large rasters. Invisible bees animation takes time?
+ - FIXED
+
+** March: fails to march on '12345678' !? Only '1234567' or less work.
+** one||two - single overlayed line!?
+
+** Server error 500 on line1/n/nline2
+
+* Wintry-road: multi-page failure (on 2nd page) // fixed
+
+## Marienbad: multi-page not implementd
+
+** TextToCoords LED 
+one / two
+- overlayed!?
+one|two - OK
+
+one	// server error!?
+
+two
+
+** Implement feature: Message color

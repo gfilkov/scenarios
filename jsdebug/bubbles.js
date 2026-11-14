@@ -86,7 +86,12 @@ let assetsCount = 0;
 // NB: uses global rasterParams object (ShowRaster.js). Set other properties if/as needed.
 // rasterParams.fontFamily = 'LED';
 
-getRaster(rasterReady);
+// NB: let Scenario to define default Magic Word
+let magicWord = rasterParams.text;
+if (!magicWord)
+	magicWord = "BUBBLES";
+
+getRaster(rasterReady, magicWord);
 
 // callback
 // strange thing happening... rasterReady() called more than once, breaking checkAssets() logic.
@@ -506,8 +511,10 @@ function update(delta) {
 
 	if (middle.y > Ymax) {
 		if (!messageShown) {
+			let color = rasterParams.color ? rasterParams.color : 'yellow';
+
 			// scenario_three_template
-			messageOnCanvas(overlayCanvas, rasterParams.message, {color: 'yellow', strokeColor: 'yellow'});
+			messageOnCanvas(overlayCanvas, rasterParams.message, { color: color, strokeColor: 'yellow'});
 			messageShown = true;
 		}
 

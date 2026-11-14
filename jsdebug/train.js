@@ -170,7 +170,12 @@ window.addEventListener('resize', centerCanvas);
 let iloop = 0;
 let nLoops = 2;	// 2;
 
-const slogans = rasterParams.text.split('||');
+// NB: let Scenario to define default Magic Word
+let magicWord = rasterParams.text;
+if (!magicWord)
+	magicWord = "GO TRAIN, GO";
+
+const slogans = magicWord.split('||');
 if (slogans.length > nLoops)
 	nLoops = slogans.length;
 
@@ -968,8 +973,10 @@ function updateEnv(dt) {
 
 	// # train, lights on top of train and flakes: canvasmow: updateSmoke()
 
-	if (showMessage)
-		messageOnCanvas(canvasenv, rasterParams.message, { strokeColor: 'white', clear: false });
+	if (showMessage) {
+		let color = rasterParams.color ? rasterParams.color : 'white';
+		messageOnCanvas(canvasenv, rasterParams.message, { strokeColor: color, clear: false });
+	}
 }
 
 function updateLights(dt) {

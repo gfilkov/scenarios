@@ -80,9 +80,13 @@ let audioSwarm = new THREE.Audio(listener);
 //// RASTER
 // ShowRaster.js:
 // NB: uses global rasterParams object (ShowRaster.js). Set other properties if/as needed.
-// rasterParams.fontFamily = 'LED';
 
-getRaster(rasterReady);
+// NB: let Scenario to define default Magic Word
+let magicWord = rasterParams.text;
+if (!magicWord)
+	magicWord = "HONEY|BEES";
+
+getRaster(rasterReady, magicWord);
 
 // callback
 // strange thing happening... rasterReady() called more than once, breaking checkAssets() logic.
@@ -403,7 +407,7 @@ function initTrinkets(pos) {
 	// params:
 	trinketD = 0.2;	// trinket diameter in current scale. Defined in ShowRaster
 	itemSizeMax = 0.25;
-	itemSizeMin = 0.09;	// 0.12;
+	itemSizeMin = 0.05;	// 0.12;
 	let density = 1.6;	//  1.5;
 	trinkets = createBanner(-BANNER_WIDTH / 2, BANNER_WIDTH / 2, -BANNER_HEIGHT / 2, BANNER_HEIGHT / 2, bee, density);
 	shuffle(trinkets);
@@ -427,8 +431,15 @@ function initTrinkets(pos) {
 		else {
 			scene.remove(trinket);
 			trinket.visible = false;
+
+			// array.splice(index, 1); // 2nd parameter means remove one item only
 		}
 	}
+
+	// Remove in one pass, after the loop
+	// trinkets = trinkets.filter(item => !shouldRemove(item));
+
+	trinkets = trinkets.filter(item => item.visible);
 }
 
 // helpers
@@ -610,7 +621,7 @@ function updateStage(delta) {
 			console.log(scenario, 'updateStage(' + stage + ')');
 			camtarget = bee.position;
 			bpos0.copy(bee.position);
-			switchAnimation(animationManager, '_bee_idle', 0);
+			switchAnimation(animationManager, '_bee_idle', 0);	// AnimationManager.js
 
 			campos0.copy(camera.position);	// start
 			campos1.lerpVectors(campos0, bpos0, stage1factor);
@@ -953,8 +964,9 @@ function updateStage(delta) {
 			elapsedTime = 0;
 			stage++;
 
+			let color = rasterParams.color ? rasterParams.color : 'yellow';
 			// scenario_three_template:
-			messageOnCanvas(overlayCanvas, rasterParams.message, { color: 'yellow', strokeColor: 'yellow' });
+			messageOnCanvas(overlayCanvas, rasterParams.message, { color: color, strokeColor: 'yellow' });
 
 			break;
 
@@ -995,6 +1007,19 @@ function updateStage(delta) {
 
 		// wait for all bees in a jar
 		case 15:
+			let idleFound = 0;
+
+			// something is fishy in the logic above. There are always some bees remaining idle.
+			// Clean up all remaining. Single run does not work!? (ES6 for-of statement:)
+			for (const item of animGroupIdle1._objects) {
+				if (idleToFly(item))
+					idleFound++;
+			}
+			for (const item of animGroupIdle2._objects) {
+				if (idleToFly(item))
+					idleFound++;
+			}
+
 			if (animGroupFly1._objects + animGroupFly2._objects.length == 0) {
 				audioSwarm.stop();
 				audioSwarm.playbackRate = 0.5;
@@ -1022,7 +1047,7 @@ let az = 0;
 let bx = 0;
 let by = 0;
 let bz = 0;
-function beeSwarm(t) {
+function beeSwarm__(t) {
 	//for (let i = 0; i < trinkets.length; i++) {
 	//	let bee = trinkets[i];
 
