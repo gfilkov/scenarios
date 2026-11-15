@@ -98,6 +98,10 @@
     txtText.value    = saved?.text ?? '';
     txtMessage.value = saved?.message ?? '';
       txtColor.value = saved?.color ?? '#00ff88';
+      txtColor.style.background = txtColor.value;
+
+      if (txtMessage.value)
+          txtMessage.style.color = txtColor.value;
 
       // do not restore Type, use recommended (optional in JSON)
       //const type = saved?.type ?? 'LED';
@@ -137,6 +141,22 @@
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && current) closeSettings();
   });
+
+    txtColor.addEventListener('input', e => {
+        txtColor.style.background = e.target.value;   // No textContent. background
+        if (txtMessage.value)
+            txtMessage.style.color = txtColor.value;
+    });
+
+    btnReset.addEventListener('click', () => {
+        if (!current) return;
+        localStorage.removeItem('settings:' + current.id);
+        txtText.value = '';
+        txtMessage.value = '';
+        txtColor.value = '#000000';
+        txtColor.style.background = '#000000';
+        document.querySelector('input[name=type][value=LED]').checked = true;
+    });
 
   // --- 4. Play / save ---
     btnPlay.addEventListener('click', () => {
