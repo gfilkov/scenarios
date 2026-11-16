@@ -3,9 +3,11 @@
 // which calls MoW_templates::showOverlay(message), which creates overlay and startButton
 // Otherwise scenario must call showOverlay() directly.
 
-var scenario = "honey-bees";
-var recordingDisabled = false;
-var recordingChecked = false;
+const scenario = "honey-bees";
+const recordingDisabled = false;
+const recordingChecked = false;
+
+const defaultMessage = "My sweet honey.";
 
 //#region CONFIG
 //// Table
@@ -85,6 +87,8 @@ let audioSwarm = new THREE.Audio(listener);
 let magicWord = rasterParams.text;
 if (!magicWord)
 	magicWord = "HONEY|BEES";
+
+let myMessage = rasterParams.message ? rasterParams.message : defaultMessage;
 
 getRaster(rasterReady, magicWord);
 
@@ -350,9 +354,6 @@ function init() {
 
 	// create, init and position trinkets.
 	initTrinkets(bannerPos);
-
-	// DEBUG
-	// messageOnCanvas(overlayCanvas, 'Testing one-two-three');
 
 	//// STUPID! Chrome, Edge do not debug, here it does not stop on 'debugger'
 	let mydebug = checkDebug();	// MoW_template.js
@@ -965,8 +966,9 @@ function updateStage(delta) {
 			stage++;
 
 			let color = rasterParams.color ? rasterParams.color : 'yellow';
+
 			// scenario_three_template:
-			messageOnCanvas(overlayCanvas, rasterParams.message, { color: color, strokeColor: 'yellow' });
+			messageOnCanvas(overlayCanvas, myMessage, { color: color, strokeColor: 'yellow' });
 
 			break;
 

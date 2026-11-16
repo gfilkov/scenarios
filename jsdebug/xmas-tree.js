@@ -2,6 +2,8 @@ var scenario = "xmas-tree";
 var recordingDisabled = false;
 var recordingChecked = false;
 
+const defaultMessage = "Merry Christmas to you!";
+
 if (iOS()) {
 	alert('iOS is not capable of playing this scenario.');
 	stopShow();
@@ -31,6 +33,8 @@ rasterParams.fontFamily = 'LED';
 let magicWord = rasterParams.text;
 if (!magicWord)
 	magicWord = "MERRY XMAS!";
+
+let myMessage = rasterParams.message ? rasterParams.message : defaultMessage;
 
 getRaster(rasterReady, magicWord);
 
@@ -696,6 +700,10 @@ function updateStage(delta) {
 			camY0 = camera.position.y;
 
 			pointOnAxis = xmastree.position;
+
+			//// unhide trees
+			trinkets.forEach((tree) => { tree.visible = true; });
+
 			stage++;
 
 			break;
@@ -719,7 +727,7 @@ function updateStage(delta) {
 			turnAngle += dAngle;
 			if (turnAngle > angle1) {
 				let color = rasterParams.color ? rasterParams.color : 'yellow';
-				messageOnCanvas(overlayCanvas, rasterParams.message, { color: color, strokeColor: color });
+				messageOnCanvas(overlayCanvas, myMessage, { color: color, strokeColor: color });
 
 				// camera goes up; target goes to center
 				p1 = camera.position.clone();
@@ -761,7 +769,7 @@ function updateStage(delta) {
 	}
 }
 
-// remove trees from lower left corner; plant xmas tree and snowman
+// hide trees from lower left corner; plant xmas tree and snowman
 function showXmas() {
 	// check if trinkets (of the rightmost char) block the camera
 	// text might be multi-line, probing all trinkets through.
@@ -771,7 +779,7 @@ function showXmas() {
 	trinkets.forEach((tree) => {
 		// console.log(tree);
 		if (tree.position.x > xMarg)
-			scene.remove(tree);
+			tree.visible = false;
 	});
 
 	scene.add(xmastree);	// => showXmas()

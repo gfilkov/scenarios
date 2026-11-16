@@ -2,6 +2,8 @@
 var recordingDisabled = false;
 var recordingChecked = false;
 
+const defaultMessage = "Let's go south!";
+
 // Creeating scene with 3 layers (canvases):
 // bkg: bkg image
 // env: environment additions: moon, rocks, rails, etc.
@@ -179,6 +181,8 @@ const slogans = magicWord.split('||');
 if (slogans.length > nLoops)
 	nLoops = slogans.length;
 
+let myMessage = rasterParams.message ? rasterParams.message : defaultMessage;
+
 // NB: uses global rasterParams object (ShowRaster.js). Set other properties if/as needed.
 //rasterParams.fontFamily = 'LED';
 
@@ -224,7 +228,7 @@ function rasterReady(result) {
 
 //#region ASSETS
 // array for Scene.loadImages()
-var imgarray = ['imgs/train/bg.png'
+const imgarray = ['imgs/train/bg.png'
 	, 'imgs/train/lights.png'
 	, 'imgs/train/moon.png'
 	, 'imgs/train/rails.png'
@@ -246,7 +250,7 @@ for (i = 1; i < 5; i++) {
 }
 
 // for assetLoader
-let imgs = {
+const imgs = {
 	'bkg': 'imgs/train/bg.png',
 	'lights': 'imgs/train/lights.png',
 	'moon': 'imgs/train/moon.png',
@@ -975,7 +979,7 @@ function updateEnv(dt) {
 
 	if (showMessage) {
 		let color = rasterParams.color ? rasterParams.color : 'white';
-		messageOnCanvas(canvasenv, rasterParams.message, { strokeColor: color, clear: false });
+		messageOnCanvas(canvasenv, myMessage, { color: color, strokeColor: color, clear: false });
 	}
 }
 

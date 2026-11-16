@@ -3,9 +3,11 @@ In htis scenario I will not be scaling raster to fit to banner.
 Rather scale banner to accomodate raster. I will use relative cam positioning to fit the scene into screen.
 */
 
-scenario = "flowers";
-var recordingDisabled = false;
-var recordingChecked = false;
+const scenario = "flowers";
+const recordingDisabled = false;
+const recordingChecked = false;
+
+const defaultMessage = "The flowers for you.";
 
 //#region RASTER
 //// no slogans in this scenario: single page
@@ -17,6 +19,8 @@ rasterParams.fontFamily = 'LED';	// enforced in this scenario
 let magicWord = rasterParams.text;
 if (!magicWord)
 	magicWord = "FLOWERS";
+
+let myMessage = rasterParams.message ? rasterParams.message : defaultMessage;
 
 getRaster(rasterReady, magicWord);
 
@@ -860,9 +864,6 @@ function updateCamera(delta) {
 
 				camera.userData.elapsedTime = 0;
 				camera.userData.stage++;
-
-				// DEBUG
-				// messageOnCanvas(overlayCanvas, "Testing 1-2-3 qqqqqqqqqqqqqqqq");	// middle of the screen, not canvas!?
 			}
 			break;
 
@@ -959,7 +960,7 @@ function updateCamera(delta) {
 				camera.userData.stage++;
 
 				// scenario_three_template
-				messageOnCanvas(overlayCanvas, rasterParams.message, { color: 'blue', strokeColor: 'white'});
+				messageOnCanvas(overlayCanvas, myMessage, { color: 'blue', strokeColor: 'white'});
 			}
 			break;
 

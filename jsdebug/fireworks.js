@@ -28,17 +28,19 @@ Firework.prototype.update =>
 launchFireballs(this.mowi);
 */
 
-var scenario = "fireworks";
-var recordingDisabled = false;
-var recordingChecked = false;
+const scenario = "fireworks";
+const recordingDisabled = false;
+const recordingChecked = false;
+
+const defaultMessage = "Congratulations!";
 
 // NB: imgarray is only used in scene.loadImages(imgarray, startFire);
 // sprites are created dynamically using imgs pathnames
-var imgarray = ['imgs/city_backdrop.jpg',
+const imgarray = ['imgs/city_backdrop.jpg',
 	'imgs/fireworks/fire_sprite_h0.png', 'imgs/fireworks/fire_sprite_h1.png', 'imgs/fireworks/fire_sprite_h2.png', 'imgs/fireworks/fire_sprite_h3.png', 'imgs/fireworks/fire_sprite_h4.png',
 	'imgs/fireworks/fireball_sprite_h0.png', 'imgs/fireworks/fireball_sprite_h1.png', 'imgs/fireworks/fireball_sprite_h2.png', 'imgs/fireworks/fireball_sprite_h3.png', 'imgs/fireworks/fireball_sprite_h4.png'];
 
-var soundsarray = ['sounds/misc114.mp3', 'sounds/fireworks.mp3', 'sounds/zvuk-saljuta.mp3'];
+const soundsarray = ['sounds/misc114.mp3', 'sounds/fireworks.mp3', 'sounds/zvuk-saljuta.mp3'];
 
 // === SPRITE stuff ===
 //#region SPRITE vars
@@ -192,6 +194,8 @@ if (!magicWord)
 const slogans = magicWord.split('||');
 if (slogans.length > loopCount)
 	loopCount = slogans.length;
+
+let myMessage = rasterParams.message ? rasterParams.message : defaultMessage;
 
 // NB: uses global rasterParams object (ShowRaster.js). Set other properties if/as needed.
 rasterParams.fontFamily = 'LED';	// enforced in this scenario
@@ -1147,7 +1151,7 @@ function paint() {
 	// if last salvo
 	if (iloop == loopCount - 1 && allFading) {
 		let color = rasterParams.color ? rasterParams.color : 'yellow';
-		messageOnCanvas(frontCanvas, rasterParams.message, { color: color, strokeColor: 'yellow' });
+		messageOnCanvas(frontCanvas, myMessage, { color: color, strokeColor: 'yellow' });
 	}
 }
 

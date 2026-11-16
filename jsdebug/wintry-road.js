@@ -1,6 +1,8 @@
 const scenario = "wintry-road";
-var recordingDisabled = false;
-var recordingChecked = false;
+const recordingDisabled = false;
+const recordingChecked = false;
+
+const defaultMessage = "Drive saafely!";
 
 //#region VARS
 var wiperl = null;
@@ -32,7 +34,7 @@ let divScene;
 var cycle;
 var ticker;
 
-var startTime;
+var startTime = null;
 var prevTime;
 var dtime;
 
@@ -72,8 +74,6 @@ let cyclesCount = 0;
 
 let showMessage = false;	// user message
 
-
-
 //#region RASTER
 // <scenario> calls ShowRaster::getRaster() => callback: <scenario>::RasterReady()
 // ShowRaster::rasterParams shoul be ready here.
@@ -94,6 +94,8 @@ const slogans = magicWord.split('||');
 
 if (slogans.length > nLoops)
 	nLoops = slogans.length;
+
+let myMessage = rasterParams.message ? rasterParams.message : defaultMessage;
 
 // NB: uses global rasterParams object (ShowRaster.js). Set other properties if/as needed.
 //rasterParams.fontFamily = 'LED';
@@ -135,11 +137,11 @@ function rasterReady(result) {
 //#region ASSETS
 // snowy-road-70.gif: 70% brightness version of snowy-road.gif
 //var imgarray = ['snowy-road-90.gif', 'view-windshield-car-transparent.png', 'test_rect.png'];
-var imgarray = ['imgs/wintry-road/snowy-road-90.gif', 'imgs/wintry-road/view-windshield-car-transparent.png', 'imgs/wintry-road/wiper_slim.png'];
+const imgarray = ['imgs/wintry-road/snowy-road-90.gif', 'imgs/wintry-road/view-windshield-car-transparent.png', 'imgs/wintry-road/wiper_slim.png'];
 //var imgarray = ['snowy-road-90.gif', 'view-windshield-car-transparent.png', 'target.png'];
 
 // wiper_slim anchor: (18, 16)
-var wiperAnchor = new Point(18, 16);
+const wiperAnchor = new Point(18, 16);
 
 const flakesidx = imgarray.length;	// flakes start in imgarray
 
@@ -362,7 +364,6 @@ function initAllCustom() {
 		ready = false;
 	}
 
-	//if (!areFlakesReady)
 	if (0 == flakes.length) {
 		initFlakes();
 		cycle.addSprites(flakes);
@@ -393,7 +394,7 @@ function paint() {
 	if (!entryCheck())
 		return;
 
-	if (undefined === startTime) {
+	if (null === startTime) {
 		let dt = new Date();
 		startTime = dt.getTime();
 		prevTime = startTime;
@@ -452,7 +453,7 @@ function paint() {
 	// showMessage set in updateWipers()
 	if (showMessage) {
 		let color = rasterParams.color ? rasterParams.color : 'white';
-		messageOnCanvas(canvascar, rasterParams.message, { color: color, clear: false });
+		messageOnCanvas(canvascar, myMessage, { color: color, clear: false });
 
 		// if gameOver was signalled in checkLoops, set wait time to show message better
 		if (0 == gameOver)
@@ -496,13 +497,16 @@ function nextLoop() {
 	if (da > 0)
 		da = -da;
 
-	//resetTrinkets();
-
 	// get new raster ASAP if there are more slogans: rasterReady()
 	if (slogans.length > 1 && iloop < slogans.length) {
 		console.log('Requested raster for slogans[', iloop, ']:', slogans[iloop]);
 		myAssetsCount = -1;	// reset getRaster extra loop safety catch
-		getRaster(resetTrinkets, slogans[iloop]);
+		getRaster(recreateTrinkets, slogans[iloop]);
+	}
+	else if (iloop < nLoops) {
+		// next loop with the same raster
+		startTime = null;
+		resetTrinkets();
 	}
 }
 //#endregion ANIMATION LOOP
@@ -538,7 +542,6 @@ function initFlakes() {
 		resetFlake(sp);
 
 		flakes.push(sp);
-		// flakes[i] = sp;
 	}
 }
 
@@ -596,6 +599,12 @@ function initTrinkets() {
 			let arched = mapToArc(x - xc, y, R);
 			sp.position(arched.x + xc, arched.y);
 
+			let target = {
+				x: arched.x + xc,
+				y: arched.y
+			};
+			sp.target = target;
+
 			sp.rotate(angle);
 			trinkets.push(sp);
 		});
@@ -651,8 +660,8 @@ function resetFlake(sp) {
 	}
 }
 
-function resetTrinkets() {
-	console.log('resetTrinkets()');
+function recreateTrinkets() {
+	console.log('recreateTrinkets()');
 
 	trinkets = [];
 
@@ -665,6 +674,14 @@ function resetTrinkets() {
 	initTrinkets();
 
 	cycle.addSprites(trinkets);
+}
+
+// fpr 2nd loop with the same rastyer - same trinkets
+function resetTrinkets() {
+	trinkets.forEach((sp) => {
+		sp.setOpacity(0);
+		sp.position(sp.target.x, sp.target.y);
+	});
 }
 
 function updateFlake(sp) {
@@ -823,6 +840,9 @@ function wipeTrinket(sp, idx) {
 	if (idx < 0 || idx >= trinkets.length)
 		return;
 
+	if (!sp)
+		return;	// sp: null is not right, but happens on errors.
+
 	// NB: sp.collidesWith(wiperr) - not good. It works scarcely - wiper has to be right on the trinket.
 	// Use poor-man solution - bearing to the trinket.
 
@@ -880,13 +900,14 @@ function blowTrinkets(sp, idx) {
 	if (null == sp)
 		return;
 
+	// invisible == blown away
+	if (!sp.opacity)
+		return;
+
 	// out of screen
 	if (sp.x < 0 || sp.x > scene.w || sp.y < 0 || sp.y > pivotR.y) {
-		//sp.remove();	// no effect on trinkets[] ?
-		//trinkets.splice(idx);	// remove from array - stops right away?!
+		trinkets[idx].setOpacity(0);	// invisible
 
-		// just count
-		trinkets[idx] = null;
 		blownTrinketsCount++;
 		return;
 	}
@@ -901,14 +922,10 @@ function blowTrinkets(sp, idx) {
 		return;
 	}
 
-	// rcOrigin - in %%
-	//let xorg = random(rcOrigin.left, rcOrigin.right) * layerbkg.w / 100;
-	//let yorg = random(rcOrigin.top, rcOrigin.bottom) * layerbkg.h / 100;
-
 	let xorg = rcOrigin.left + rcOrigin.w / 2 * layerbkg.w / 100 * random(0.9, 1.1);
 	let yorg = rcOrigin.top + rcOrigin.h / 2 * layerbkg.h / 100 * random(0.9, 1.1);
 
-	sp.xv = speed * 8 * random(0.9, 1.1);		// speed; WTF!? they are just cvreeping, not flying
+	sp.xv = speed * 8 * random(0.9, 1.1);		// speed; WTF!? they are just creeping, not flying
 	sp.yv = 0;
 
 	// direction

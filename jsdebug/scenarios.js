@@ -10,7 +10,10 @@
   const btnPlay        = document.getElementById('btnPlay');
   const btnCancel      = document.getElementById('btnCancel');
 
-  let current = null; // currently selected scenario
+    let current = null; // currently selected scenario
+
+    //Can't set color to null or ''; using '#000000' as default.
+    const defaultColor = '#000000';
 
   // --- 1. Load manifest ---
   async function loadManifest() {
@@ -96,8 +99,9 @@
     // Restore any per-scenario saved settings, else defaults
     const saved = JSON.parse(localStorage.getItem('settings:' + item.id) || 'null');
     txtText.value    = saved?.text ?? '';
-    txtMessage.value = saved?.message ?? '';
-      txtColor.value = saved?.color ?? '#00ff88';
+      txtMessage.value = saved?.message ?? '';
+      // can't use '#000000' as 'no color'. It passes param 'black'
+      txtColor.value = saved?.color ?? defaultColor;    // '#00ff88';
       txtColor.style.background = txtColor.value;
 
       if (txtMessage.value)
@@ -153,8 +157,8 @@
         localStorage.removeItem('settings:' + current.id);
         txtText.value = '';
         txtMessage.value = '';
-        txtColor.value = '#000000';
-        txtColor.style.background = '#000000';
+        txtColor.value = defaultColor;  // '#000000';
+        txtColor.style.background = defaultColor;
         document.querySelector('input[name=type][value=LED]').checked = true;
     });
 
@@ -166,11 +170,14 @@
         //if (!txtText.value)
         //    txtText.value = current.scene;
 
+        // cut out default color (can't set color to anythig but valid CSS color)
+        let myColor = txtColor.value === defaultColor ? '' : txtColor.value;
+
         const payload = {
             scene: current.scene,                    // e.g. "birds"
             text: txtText.value,
             message: txtMessage.value,
-            color: txtColor.value,
+            color: myColor, // txtColor.value,
             type: document.querySelector('input[name="type"]:checked').value
         };
 

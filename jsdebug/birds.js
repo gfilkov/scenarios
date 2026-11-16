@@ -12,13 +12,15 @@
 
 // no 'try/catch', let window.onerror in MoW_template handle exceptions
 
-var scenario = "birds";
-var recordingDisabled = false;
-var recordingChecked = false;
+const scenario = "birds";
+const recordingDisabled = false;
+const recordingChecked = false;
 // var rotateRequest = true;   // optional; scenario requests horiz screen
 
+const defaultMessage = "Let's fly south?";
 
-var imgarray = ['imgs/Rain_Clouds.jpg', 'imgs/birdL.png', 'imgs/birdR.png'];
+
+const imgarray = ['imgs/Rain_Clouds.jpg', 'imgs/birdL.png', 'imgs/birdR.png'];
 
 // raster
 //var urlVars = getUrlVars();    // mow.js
@@ -126,6 +128,8 @@ var raster;	// to be assigned in rasterReady()
 let magicWord = rasterParams.text;
 if (!magicWord)
 	magicWord = "BIRDS";
+
+let myMessage = rasterParams.message ? rasterParams.message : defaultMessage;
 
 getRaster(rasterReady, magicWord);
 
@@ -565,11 +569,11 @@ function paint() {
 			break;
 		// birds fly / scale away
 		case 3:
-			if (rasterParams.message) {
+			// defaultMessage must be defined!
+			if (rasterParams.message || defaultMessage) {
 				// defined in ShowRaster
 				let color = rasterParams.color ? rasterParams.color : 'blue';
-
-				messageOnCanvas(canvasText, rasterParams.message, { color: color, strokeColor: 'white' });
+				messageOnCanvas(canvasText, myMessage, { color: color, strokeColor: 'white' });
 			}
 
 			// case 3 will be set on probing last bird (opacity ~= 0)
@@ -684,7 +688,7 @@ function stopfade() {
 		assetLoader.sounds.crows.volume = 1.0;
 	}
 
-	gameOver = 0;	// exit at once regardless the message: there is enought time for message review.
+	gameOver = 4;	// secs delay. scenario_three_template. Effective if no recorder.
 }
 
 

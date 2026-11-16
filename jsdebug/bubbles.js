@@ -20,16 +20,16 @@ Animation: on startButton click.
 //  <next> if(preview.src = recUrl <not "">) exit loop; showPreview()
 //}
 
-var scenario = "bubbles";
-var recordingDisabled = false;
-var recordingChecked = false;
+let scenario = "bubbles";
+let recordingDisabled = false;
+let recordingChecked = false;
 
 if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 let canvas = null, overlayCanvas = null, container = null;
-var camera, scene, renderer;
-var mesh, zmesh, lightMesh, geometry;
-var spheres = [];
+let camera, scene, renderer;
+let mesh, zmesh, lightMesh, geometry;
+let spheres = [];
 
 const startX = 0;	// bubbles initial position
 const startY = -3000;
@@ -54,7 +54,7 @@ document.addEventListener('mouseup', onDocumentMouseUp, false);
 var bubblesnum = 0; // number of active (visible bubbles)
 var bubblespeed = 200;
 var activebubbles = 0;
-var Ymax = 60000;   // bubbles start popping
+var Ymax = 40000;	// 60000;   // bubbles start popping
 let allhome = false;
 
 let releaseTime = 15000;	// seconds to release all
@@ -560,9 +560,9 @@ function update(delta) {
 		if (sphere.userData.home) {
 			// meander around target
 			// make movements relative to bubble size; limit lateral movements
-			sphere.position.x = sphere.userData.target.x + 15 * sphere.scale.x * Math.cos(timer * 20 + i);
-			sphere.position.y = sphere.userData.target.y + 60 * sphere.scale.y * Math.sin(timer * 20 + i * 1.1);
-			sphere.position.z = sphere.userData.target.z + 60 * sphere.scale.z * Math.sin(timer * 20 + i * 1.2);
+			sphere.position.x = sphere.userData.target.x + 30 * sphere.scale.x * Math.cos(timer * 20 + i);
+			sphere.position.y = sphere.userData.target.y + 100 * sphere.scale.y * Math.sin(timer * 20 + i * 1.1);
+			sphere.position.z = sphere.userData.target.z + 100 * sphere.scale.z * Math.sin(timer * 20 + i * 1.2);
 		}
 		else {
 			allhome = false;

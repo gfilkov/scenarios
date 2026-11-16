@@ -22,8 +22,10 @@
 // all other calls must provide word in params or in sessionStorage
 
 const scenario = "shells";
-var recordingDisabled = false;
-var recordingChecked = false;
+const recordingDisabled = false;
+const recordingChecked = false;
+
+const defaultMessage = "The sea is calling.";
 
 ////////
 // DEBUG
@@ -190,6 +192,8 @@ if (slogans.length > loopCount)
 
 // NB: uses global rasterParams object (ShowRaster.js). Set other properties if/as needed.
 rasterParams.fontFamily = 'LED';	// enforced
+
+let myMessage = rasterParams.message ? rasterParams.message : defaultMessage;
 
 // optional 'slogan' param - to override rasterParams.text for multi-slogan scenarios.
 getRaster(rasterReady, slogans[loopIdx]);
@@ -790,8 +794,9 @@ function paint() {
 		// message
 		if (loopIdx == loopCount - 1) {
 			// if last loop
-			if (progress > 700)
-				messageOnCanvas(canvas, rasterParams.message, { color: 'blue', strokeColor: 'blue' });
+			if (progress > 700) {
+				messageOnCanvas(canvas, myMessage, { color: 'blue', strokeColor: 'blue' });
+			}
 		}
 	}
 
