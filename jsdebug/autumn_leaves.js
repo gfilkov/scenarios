@@ -208,7 +208,15 @@ function initAssets() {
 
 			// onLoad callback
 			function (texture) {
-				let leafMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide, transparent: true });
+				// MeshBasicMaterial ignores light
+				//let leafMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide, transparent: true });
+
+				let leafMaterial = new THREE.MeshLambertMaterial({
+					map: texture,
+					side: THREE.DoubleSide,
+					transparent: true
+				});
+
 				let leafGeometry = new THREE.PlaneGeometry(1, 1, 1, 1);
 				let leaf = new THREE.Mesh(leafGeometry, leafMaterial);
 
@@ -235,9 +243,20 @@ let directionalLight;
 function init() {
 	console.log("autumn: init()");
 
-	// White directional light at half intensity shining from the top.
-	const directionalLight = new THREE.DirectionalLight(0xffffff);
-	directionalLight.intensity = 64;
+	//// White directional light at half intensity shining from the top.
+	//const directionalLight = new THREE.DirectionalLight(0x404040);
+	//directionalLight.position.set(10, 10, 10);
+	//directionalLight.intensity = 0.5;
+	//scene.add(directionalLight);
+
+	// AmbientLight( color : Integer, intensity : Float )	// intensity default: 1
+	// without it leaves are sharp black on reverse.
+	ambientLight = new THREE.AmbientLight(0x403030, 0.5); // 0x404040: soft white light
+	ambientLight.intensity = ambLtIntensity;
+	scene.add(ambientLight);
+
+	// Add a second, very weak HemisphereLight(sky color slightly warm, ground color dark brown) — gives subtle top / bottom variation without the "spotlight" feel of a directional light:
+	scene.add(new THREE.HemisphereLight(0x806050, 0x201510, 0.3));
 
 	// Back to old good container DIV with canvases inside.
 	// Advantage: easier and more logical to center single DIV than multiple canvases.

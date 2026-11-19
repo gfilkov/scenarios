@@ -587,7 +587,7 @@ function paint() {
 			break;
 		default:
 		// Code to execute if no cases match
-			throw new Error("Unknown stage in paint()!");
+		//	throw new Error("Unknown stage in paint()!");
 	}
 
 	// use just trinket speed/update
