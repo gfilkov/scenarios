@@ -65,7 +65,18 @@ class SceneComposer {
         if (intersects.length > 0) {
             // Find the topmost selectable Mesh (excluding helpers)
             const hit = intersects.find(i => i.object.isMesh);
-            if (hit) this._selectObject(hit.object);
+            // if (hit) this._selectObject(hit.object);
+
+            // I tag loaded GLTF in loadGltfModel():
+            // model.userData.isSelectableRoot = true;
+
+            if (hit) {
+                let target = hit.object;
+                while (target && !target.userData.isSelectableRoot) {
+                    target = target.parent;
+                }
+                this._selectObject(target || hit.object);
+            }
         }
     }
 
